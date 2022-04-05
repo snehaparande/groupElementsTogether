@@ -5,11 +5,11 @@ const areEqual = function (firstItem, secondItem) {
     }
     for (let index = 0; index < firstItem.length; index++) {
       if (!areEqual(firstItem[index], secondItem[index])) {
-          return false;
-        }
+        return false;
       }
-      return true;
     }
+    return true;
+  }
   return firstItem === secondItem;
 };
 
@@ -21,13 +21,17 @@ const groupElementsTogether = function (array) {
   const remainingElements = [];
   
   for (let index = 1; index < array.length; index++) {
+    let arrayToBePushed = remainingElements;
     if (areEqual(groupedElement[0], array[index])) {
-      groupedElement.push(array[index]);
-    } else {
-      remainingElements.push(array[index]);
+      arrayToBePushed = groupedElement;
     }
+    arrayToBePushed.push(array[index]);
   }
   return [groupedElement].concat(groupElementsTogether(remainingElements));
 };
 
-console.log(groupElementsTogether([[1, 1], 1, [1, 1], 1, 2, 6]));
+console.log(groupElementsTogether([])); // []
+console.log(groupElementsTogether([1])); // [[1]]
+console.log(groupElementsTogether([1, 2, 2])); // [[1], [2, 2]]
+console.log(groupElementsTogether([1, 2, 2, 3, 1])); // [[1, 1], [2, 2], 3]
+console.log(groupElementsTogether([[1, 1], 1, [1, 1], 1, 2, 6])); // [[[1, 1], [1, 1]], [1, 1], [2], [6]]
