@@ -1,16 +1,20 @@
-const areEqual = function (firstItem, secondItem) {
-  if (Array.isArray(firstItem) && Array.isArray(secondItem)) {
-    if (firstItem.length !== secondItem.length) {
+const areArraysEqual = function (array1, array2) {
+  if (array1.length !== array2.length) {
+    return false;
+  }
+  for (let index = 0; index < array1.length; index++) {
+    if (!areEqual(array1[index], array2[index])) {
       return false;
     }
-    for (let index = 0; index < firstItem.length; index++) {
-      if (!areEqual(firstItem[index], secondItem[index])) {
-        return false;
-      }
-    }
-    return true;
   }
-  return firstItem === secondItem;
+  return true;
+};
+
+const areEqual = function (firstItem, secondItem) {
+  if (!Array.isArray(firstItem) || Array.isArray(secondItem)) {
+    return firstItem === secondItem;
+  }
+  return areArraysEqual(firstItem, secondItem);
 };
 
 const groupElementsTogether = function (array) {
