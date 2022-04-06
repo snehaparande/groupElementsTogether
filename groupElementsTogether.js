@@ -13,33 +13,41 @@ const areEqual = function (firstItem, secondItem) {
     return true;
 };
 
-const groupElementsTogether = function (set) {
+const locate = function (element, set) {
+  for (let index = 0; index < set.length; index++) {
+    if (areEqual(element, set[index][0])) {
+      return index;
+    }
+  }
+};
+
+const isPresent = function (element, set) {
+  for (let index = 0; index < set.length; index++) {
+    if (areEqual(element, set[index][0])) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const groupByIdentity = function (set) {
   if (set.length === 0) {
     return [];
   }
-  let remainingSet = set.slice(0);
-  const groupedElements = [];
-  
-  for (let index = 0; index < remainingSet.length; index++) {
-    const identicalElements = [remainingSet[0]];
-    const remainingElements = [];
-
-    for (let index = 1; index < remainingSet.length; index++) {
-      let arrayToBePushed = remainingElements;
-      if (areEqual(identicalElements[0], remainingSet[index])) {
-        arrayToBePushed = identicalElements;
-      }
-      arrayToBePushed.push(remainingSet[index]);
+  const groupedElements = [[set[0]]];
+  for (let index = 1; index < set.length; index++) {
+    if (isPresent(set[index], groupedElements)) {
+      const position = locate(set[index], groupedElements);
+      groupedElements[position].push(set[index]);
+    } else {
+      groupedElements.push([set[index]]);
     }
-    groupedElements.push(identicalElements);
-    remainingSet = remainingElements.slice(0);
-    index = -1;
   }
   return groupedElements;
 };
 
-console.log(groupElementsTogether([])); // []
-console.log(groupElementsTogether([1])); // [[1]]
-console.log(groupElementsTogether([1, 2, 2])); // [[1], [2, 2]]
-console.log(groupElementsTogether([1, 2, 2, 3, 1])); // [[1, 1], [2, 2], 3]
-console.log(groupElementsTogether([[1, 1], 1, [1, 1], 1, 2, 6])); // [[[1, 1], [1, 1]], [1, 1], [2], [6]]
+console.log(groupByIdentity([])); // []
+console.log(groupByIdentity([1])); // [[1]]
+console.log(groupByIdentity([1, 2, 2])); // [[1], [2, 2]]
+console.log(groupByIdentity([1, 2, 2, 3, 1])); // [[1, 1], [2, 2], 3]
+console.log(groupByIdentity([[1, 1], 1, [1, 1], 1, 2, 6])); // [[[1, 1], [1, 1]], [1, 1], [2], [6]]
