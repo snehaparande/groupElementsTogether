@@ -1,37 +1,41 @@
-const areArraysEqual = function (array1, array2) {
-  if (array1.length !== array2.length) {
-    return false;
-  }
-  for (let index = 0; index < array1.length; index++) {
-    if (!areEqual(array1[index], array2[index])) {
-      return false;
-    }
-  }
-  return true;
-};
-
 const areEqual = function (firstItem, secondItem) {
-  if (!Array.isArray(firstItem) || Array.isArray(secondItem)) {
+  if (!(Array.isArray(firstItem) && Array.isArray(secondItem))) {
     return firstItem === secondItem;
   }
-  return areArraysEqual(firstItem, secondItem);
+  if (firstItem.length !== secondItem.length) {
+    return false;
+  }
+  for (let index = 0; index < firstItem.length; index++) {
+    if (!areEqual(firstItem[index], secondItem[index])) {
+        return false;
+      }
+    }
+    return true;
 };
 
-const groupElementsTogether = function (array) {
-  if (array.length === 0) {
+const groupElementsTogether = function (set) {
+  if (set.length === 0) {
     return [];
   }
-  const groupedElement = [array[0]];
-  const remainingElements = [];
+  let remainingSet = set.slice(0);
+  const groupedElements = [];
   
-  for (let index = 1; index < array.length; index++) {
-    let arrayToBePushed = remainingElements;
-    if (areEqual(groupedElement[0], array[index])) {
-      arrayToBePushed = groupedElement;
+  for (let index = 0; index < remainingSet.length; index++) {
+    const identicalElements = [remainingSet[0]];
+    const remainingElements = [];
+
+    for (let index = 1; index < remainingSet.length; index++) {
+      let arrayToBePushed = remainingElements;
+      if (areEqual(identicalElements[0], remainingSet[index])) {
+        arrayToBePushed = identicalElements;
+      }
+      arrayToBePushed.push(remainingSet[index]);
     }
-    arrayToBePushed.push(array[index]);
+    groupedElements.push(identicalElements);
+    remainingSet = remainingElements.slice(0);
+    index = -1;
   }
-  return [groupedElement].concat(groupElementsTogether(remainingElements));
+  return groupedElements;
 };
 
 console.log(groupElementsTogether([])); // []
